@@ -13,7 +13,7 @@
     android:src="@drawable/pomodoro" />
 
     <TextView
-        android:id="@+id/textSplashTitle"
+        android:id="@+id/textSplahTitle"
         style="@style/PomodriveTheme.SplashTitle"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
