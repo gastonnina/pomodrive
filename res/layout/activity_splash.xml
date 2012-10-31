@@ -13,17 +13,14 @@
     android:src="@drawable/pomodoro" />
 
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/textSplashTitle"
+        style="@style/PomodriveTheme.SplashTitle"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
-        android:text="@string/reloj"
-        android:textColor="#AADD4B39"
-        android:textSize="80sp"
+        android:layout_marginTop="118dp"
+        android:text="@string/pomodrive"
         android:textStyle="bold|italic"
-        android:typeface="serif"
-        tools:context=".MainActivity" />
+        tools:context=".SplashActivity" />
 
 </RelativeLayout>
