@@ -1,25 +1,5 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar" />
-    <style name="PomodriveTheme">
-		<item name="android:typeface">serif</item>
-    </style>
-	<style name="PomodriveTheme.SplashTitle">
-	    <item name="android:layout_width">wrap_content</item>
-	    <item name="android:layout_height">wrap_content</item>
-	    <item name="android:textSize">55sp</item>
-	    <item name="android:textColor">#AADD4B39</item>
-	</style>
-	<style name="PomodriveTheme.redGoogle">
-	    <item name="android:textColor">#DD4B39</item>
-	</style>
-	<style name="PomodriveTheme.redGoogleAlfa">
-	    <item name="android:textColor">#AADD4B39</item>
-	</style>
-	<style name="PomodriveTheme.yellowGoogle">
-	    <item name="android:textColor">#E9F756</item>
-	</style>
-	<style name="PomodriveTheme.greenGoogle">
-	    <item name="android:textColor">#ACF243</item>
-	</style>
+   
 	
 </resources>

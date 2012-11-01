@@ -2,28 +2,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-<ImageView
-    android:id="@+id/imageSplash"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:adjustViewBounds="false"
-    android:scaleType="centerCrop"
-    android:src="@drawable/pomodoro" />
+
+    <ImageView
+        android:id="@+id/imageSplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="false"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pomodoro" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/lblReloj"
+        style="@style/PomodriveTheme.redGoogleAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
         android:text="@string/reloj"
-        android:textColor="#AADD4B39"
-        android:textSize="80sp"
-        android:textStyle="bold|italic"
-        android:typeface="serif"
+        android:textSize="100sp"
         tools:context=".MainActivity" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/lblReloj"
+        android:layout_below="@+id/lblReloj"
+        android:layout_marginRight="45dp"
+        android:layout_marginTop="20dp"
+        android:onClick="startPomodoro"
+        android:visibility="invisible"
+        android:text="Pomodoro" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button1"
+        android:layout_marginTop="78dp"
+        android:onClick="startShortBreak"
+        android:visibility="invisible"
+        android:text="Corto" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/button1"
+        android:onClick="startLongBreak"
+        android:visibility="invisible"
+        android:text="Largo" />
+
+    <Chronometer
+        android:id="@+id/chrono"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lblReloj"
+        android:layout_alignTop="@+id/button1"
+        android:visibility="invisible"
+        android:layout_marginLeft="14dp"
+        android:text="Chronometer" />
+
+    <Button
+        android:id="@+id/btnTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblReloj"
+        android:layout_centerHorizontal="true"
+        android:onClick="startPomodoro"
+        android:text="Start" />
 
 </RelativeLayout>
