@@ -24,48 +24,6 @@
         tools:context=".MainActivity" />
 
     <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/lblReloj"
-        android:layout_below="@+id/lblReloj"
-        android:layout_marginRight="45dp"
-        android:layout_marginTop="20dp"
-        android:onClick="startPomodoro"
-        android:visibility="invisible"
-        android:text="Pomodoro" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button1"
-        android:layout_marginTop="78dp"
-        android:onClick="startShortBreak"
-        android:visibility="invisible"
-        android:text="Corto" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/button1"
-        android:onClick="startLongBreak"
-        android:visibility="invisible"
-        android:text="Largo" />
-
-    <Chronometer
-        android:id="@+id/chrono"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/lblReloj"
-        android:layout_alignTop="@+id/button1"
-        android:visibility="invisible"
-        android:layout_marginLeft="14dp"
-        android:text="Chronometer" />
-
-    <Button
         android:id="@+id/btnTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,5 +31,13 @@
         android:layout_centerHorizontal="true"
         android:onClick="startPomodoro"
         android:text="Start" />
+
+    <Chronometer
+        android:id="@+id/chrono"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Chronometer" />
 
 </RelativeLayout>

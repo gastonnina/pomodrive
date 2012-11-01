@@ -21,12 +21,12 @@ public class MainActivity extends Activity {
 	Button btnTimer;
 	CountDownTimer reloj;
 	Chronometer relojb;
-	//long minute =60000;
-	long minute =1000;
+	long minute =60000;
+	//long minute =1000;
 	long second =1000;
-	long pomodoroLength = 5*minute;//25
-	long timeShortBreakLength = 3*minute;//5
-	long timeLongBreakLength = 7*minute;//20
+	long pomodoroLength = 25*minute;//25//5
+	long timeShortBreakLength = 5*minute;//5//3
+	long timeLongBreakLength = 20*minute;//20//7
 	int timeLongBreakInterval=4;
 	long countPomodoro=0;//All pomodoros since you have started the app
 	long usedPomodoro=0;
