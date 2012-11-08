@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class PomodoroDatabaseAdapter {
 
@@ -48,10 +49,9 @@ public class PomodoroDatabaseAdapter {
 		return db.delete("personas", "_id=" + id, null) > 0;
 	}
 
-	public Cursor obtenerPersona(long id) {
-		return db.query("personas", new String[] { "_id", "nombre", "telefono",
-				"correo", "sexo" }, "_id=?", new String[] { id + "" }, null,
-				null, null);
+	public Cursor getPomodoroById(long id) {
+		Log.i("INFO", "el id es --->"+id);
+		return db.query("pomodoro", new String[] { "id", "name", "estimated"}, "id=?", new String[] { id + "" }, null, null, null);
 	}
 
 	public Cursor obtenerTodasPersonas() {
