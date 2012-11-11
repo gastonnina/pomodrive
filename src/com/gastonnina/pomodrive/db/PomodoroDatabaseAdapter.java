@@ -54,6 +54,20 @@ public class PomodoroDatabaseAdapter {
 				"estimated", "pomodoros", "unplanned", "interruptions",
 				"created" }, null, null, null, null, null);
 	}
+	/**
+	 * Obtiene todos los datos de configuracion
+	 * @return cursor 
+	 */
+	public Cursor getAllConfigs(){
+		return db.rawQuery("SELECT name, value FROM config WHERE name='pomodoroLength' OR name='time.shortBreakLength' OR name='time.longBreakLength' OR name='time.longBreakInterval'",null);
+	}
+	public long updateConfig(String name, String value) {
+		ContentValues cVal = new ContentValues();
+		cVal.put("name", name);
+		cVal.put("value", value);
+		return db.update("config", cVal, "name=?", new String[] { name + "" });
+	}
+
 
 	/**
 	 * Clase que determina la estructura de la base de datos.

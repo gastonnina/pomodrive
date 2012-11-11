@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/lblCnfPomLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/strLblCnfPomLength" />
+
+    <SeekBar
+        android:id="@+id/cnfBarPomLength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="24"
+        android:max="59" />
+
+    <TextView
+        android:id="@+id/lblCnfBrkShortLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/strLblCnfBrkShortLength" />
+
+    <SeekBar
+        android:id="@+id/cnfBarBrkShortLength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="4"
+        android:max="29" />
+
+    <TextView
+        android:id="@+id/lblCnfBrkLongLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/strLblCnfBrkLongLength" />
+
+    <SeekBar
+        android:id="@+id/cnfBarBrkLongLength"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="19"
+        android:max="59" />
+	<TextView
+        android:id="@+id/lblCnfBrkLongInterval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/strLblCnfBrkLongInterval" />
+
+	<EditText
+	    android:id="@+id/cnfBrkLongInterval"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:minEms="1"
+	    android:text="4"
+	    android:maxEms="30"
+	    android:inputType="number" >
+
+	    <requestFocus />
+	</EditText>
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnFrmSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btnSave" />
+
+        <Button
+            android:id="@+id/btnFrmCancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/btnCancel" />
+    </LinearLayout>   
+
+</LinearLayout>

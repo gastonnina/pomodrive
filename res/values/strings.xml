@@ -16,6 +16,7 @@
     <string name="taskName">Tarea</string>
     <string name="estimated">Estimado</string>
     
+    <string name="TitleConfig">Configurar Tiempos</string>
     <string name="TitleAdd">Adicionar Pomodoro</string>
     <string name="TitleEdit">Editar Pomodoro</string>
     <string name="TitleDelete">Eliminar Pomodoro</string>
@@ -25,5 +26,14 @@
     
     <string name="yes">SI</string>
     <string name="no">NO</string>
+    
+    <!-- config pomodoro -->
+    <string name="strLblCnfPomLength">Pomodoro length</string>
+    <string name="strLblCnfBrkShortLength">Short break Length</string>
+    <string name="strLblCnfBrkLongLength">Long break length</string>
+    <string name="strLblCnfBrkLongInterval">Long break interval</string>
+    
+    
+    
     
 </resources>
