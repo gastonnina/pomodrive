@@ -9,5 +9,21 @@
     <string name="adicionar">Adicionar</string>
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
-
+    
+    <string name="btnSave">Guardar</string>
+    <string name="btnCancel">Cancelar</string>
+    <!-- Form Dialog pomodoro -->
+    <string name="taskName">Tarea</string>
+    <string name="estimated">Estimado</string>
+    
+    <string name="TitleAdd">Adicionar Pomodoro</string>
+    <string name="TitleEdit">Editar Pomodoro</string>
+    <string name="TitleDelete">Eliminar Pomodoro</string>
+    <string name="confirmDelete">Realmente desea Eliminar?</string>
+    
+    <string name="lblEstimated">Estimado</string>
+    
+    <string name="yes">SI</string>
+    <string name="no">NO</string>
+    
 </resources>

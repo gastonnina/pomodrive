@@ -24,44 +24,35 @@ public class PomodoroDatabaseAdapter {
 		databaseHelper.close();
 	}
 
-	public long adicionarPersona(String nombre, long telefono, String correo,
-			String sexo) {
+	public long insertPomodoro(String name, long estimated) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put("nombre", nombre);
-		contentValues.put("telefono", telefono);
-		contentValues.put("correo", correo);
-		contentValues.put("sexo", sexo);
-		return db.insert("personas", null, contentValues);
+		contentValues.put("name", name);
+		contentValues.put("estimated", estimated);
+		contentValues.put("type", "Pomodoro");
+		return db.insert("pomodoro", null, contentValues);
 	}
 
-	public int actualizarPersona(long id, String nombre, long telefono,
-			String correo, String sexo) {
-		ContentValues contentValues = new ContentValues();
-		contentValues.put("nombre", nombre);
-		contentValues.put("telefono", telefono);
-		contentValues.put("correo", correo);
-		contentValues.put("sexo", sexo);
-		return db.update("personas", contentValues, "_id=?", new String[] { id
-				+ "" });
+	public int updatePomodoro(long id, String name, long estimated) {
+		ContentValues cVal = new ContentValues();
+		cVal.put("name", name);
+		cVal.put("estimated", estimated);
+		return db.update("pomodoro", cVal, "id=?", new String[] { id + "" });
 	}
 
-	public boolean eliminarPersona(long id) {
-		return db.delete("personas", "_id=" + id, null) > 0;
+	public boolean deletePomodoro(long id) {
+		return db.delete("pomodoro", "id=" + id, null) > 0;
 	}
 
 	public Cursor getPomodoroById(long id) {
-		Log.i("INFO", "el id es --->"+id);
-		return db.query("pomodoro", new String[] { "id", "name", "estimated"}, "id=?", new String[] { id + "" }, null, null, null);
+		Log.i("INFO", "el id es --->" + id);
+		return db.query("pomodoro", new String[] { "id", "name", "estimated" },
+				"id=?", new String[] { id + "" }, null, null, null);
 	}
 
-	public Cursor obtenerTodasPersonas() {
-		return db.query("personas", new String[] { "_id", "nombre", "telefono",
-				"correo", "sexo" }, null, null, null, null, null);
-	}
-	
-	public Cursor getAllPomodoros(){
+	public Cursor getAllPomodoros() {
 		return db.query("pomodoro", new String[] { "id", "name", "type",
-				"pomodoros", "created" }, null, null, null, null, null);
+				"estimated", "pomodoros", "unplanned", "interruptions",
+				"created" }, null, null, null, null, null);
 	}
 
 	/**

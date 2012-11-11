@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -16,18 +18,24 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.Chronometer.OnChronometerTickListener;
-import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gastonnina.pomodrive.adapters.ListaNormalAdapter;
 import com.gastonnina.pomodrive.db.PomodoroDatabaseAdapter;
-
+/**
+ * Main class to make the pomodoro 
+ * @author Gastón Nina <gastonnina@gmail.com>
+ *
+ */
 public class MainActivity extends Activity {
 	MainActivity that = this;
 	TextView lblReloj;
@@ -106,12 +114,63 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		/*switch (item.getItemId()) {
+		Log.i("INFO","opcion---"+item.getItemId());
+		switch (item.getItemId()) {
 		case R.id.menu_adicionar:
-			Intent intent = new Intent(this, FormularioActivity.class);
-			startActivity(intent);
+			/*Intent intent = new Intent(this, FormularioActivity.class);
+			startActivity(intent);*/
+			final Dialog miDialog = new Dialog(that);
+	    	miDialog.setContentView(R.layout.form_pomodoro);
+	    	miDialog.setTitle(R.string.TitleAdd);
+	    		
+	    	
+			TextView pomTxtId = (TextView) miDialog.findViewById(R.id.pomTxtId);
+			final TextView pomTxtName = (TextView) miDialog.findViewById(R.id.pomTxtName);
+			final TextView lblFrmTxtEstimated = (TextView) miDialog.findViewById(R.id.lblFrmTxtEstimated);
+			final SeekBar pomBarEstimated = (SeekBar) miDialog.findViewById(R.id.pomBarEstimated);
+			
+			pomBarEstimated
+					.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+						public void onStopTrackingTouch(SeekBar bar) {
+							// txt2.setText("seekbar has been stop");
+						}
+
+						public void onStartTrackingTouch(SeekBar bar) {
+							// txt2.setText("seekbar has started");
+						}
+
+						public void onProgressChanged(SeekBar bar,
+								int paramInt, boolean paramBoolean) {
+							lblFrmTxtEstimated.setText(R.string.lblEstimated
+									+ ": " + (paramInt + 1));
+						}
+	         });
+	    	pomTxtId.setText("");
+	    	pomTxtName.setText("");
+	    	lblFrmTxtEstimated.setText(R.string.lblEstimated+ ": 1");
+	    	pomBarEstimated.setProgress(0);
+
+			//FIXME - mover a un general
+			//Recojemos el boton para anadirle una accion
+			Button btnSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
+			
+			btnSave.setOnClickListener(new OnClickListener() {
+			     public void onClick(View v) {
+						//actualiza BD
+						db.insertPomodoro(pomTxtName.getText().toString(),(long) (pomBarEstimated.getProgress()+1));
+						miDialog.dismiss();
+						cargarDatosLista();
+			     }
+			 });   
+			Button btnCancel = (Button) miDialog.findViewById(R.id.btnFrmCancel);
+			btnCancel.setOnClickListener(new OnClickListener() {
+			     public void onClick(View v) {
+			    	 miDialog.dismiss();
+			     }
+			});
+	    	miDialog.show();//importante
 			break;
-		}*/
+		}
 		//-- tiene que llamar a menu popup y de ese recien a editar
 		return super.onOptionsItemSelected(item);
 	}
@@ -128,36 +187,94 @@ public class MainActivity extends Activity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo(); // Para obtener que item se presiono (posici�n
 								// item)
-		int index = info.position;
+		final int index = info.position;
+		//para todas las opciones
+		final long id = ids.get(index);
+		
 		switch (item.getItemId()) {
 		case R.id.menu_editar:
 			/*Intent intent = new Intent(this, FormularioActivity.class);
 			intent.putExtra("id", ids.get(index));
 			startActivity(intent);*/
-			Dialog miDialog = new Dialog(that);
-	    	miDialog.setContentView(R.layout.form_p_add);
-	    	miDialog.setTitle("Adicionar Pomodoro");
-	    	long id = ids.get(index);
+			final Dialog miDialog = new Dialog(that);
+	    	miDialog.setContentView(R.layout.form_pomodoro);
+	    	miDialog.setTitle(R.string.TitleEdit);
+	    	
+	    	
 	    	Cursor cursor = db.getPomodoroById(id);
+	    	
+	    	final TextView pomTxtId=(TextView) miDialog.findViewById(R.id.pomTxtId);
+			final TextView pomTxtName=(TextView) miDialog.findViewById(R.id.pomTxtName);
+			final TextView lblFrmTxtEstimated = (TextView) miDialog.findViewById(R.id.lblFrmTxtEstimated);
+			final SeekBar pomBarEstimated = (SeekBar) miDialog.findViewById(R.id.pomBarEstimated);
+			pomBarEstimated
+			.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+				public void onStopTrackingTouch(SeekBar bar) {
+					// txt2.setText("seekbar has been stop");
+				}
+
+				public void onStartTrackingTouch(SeekBar bar) {
+					// txt2.setText("seekbar has started");
+				}
+
+				public void onProgressChanged(SeekBar bar,
+						int paramInt, boolean paramBoolean) {
+					lblFrmTxtEstimated.setText(R.string.lblEstimated
+							+ ": " + (paramInt + 1));
+				}
+     });
 			if (cursor.moveToFirst()) {
 				String name = cursor.getString(1);
-				int estimated = cursor.getInt(2);
-				
-				TextView pomTxtId=(TextView) miDialog.findViewById(R.id.pomTxtId);
-				TextView pomTxtName=(TextView) miDialog.findViewById(R.id.pomTxtName);
-				TextView pomTxtEstimated=(TextView) miDialog.findViewById(R.id.pomTxtEstimated);
-				
+				int estimated = cursor.getInt(2);				
 				pomTxtId.setText(""+id);
 				pomTxtName.setText(""+name);
-				pomTxtEstimated.setText(""+estimated);
+				lblFrmTxtEstimated.setText(R.string.lblEstimated+": "+estimated);
+				pomBarEstimated.setProgress(estimated-1);
 			}
-	    	
+			//FIXME - mover a un general
+			//Recojemos el boton para anadirle una accion
+			Button btnSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
+			
+			btnSave.setOnClickListener(new OnClickListener() {
+			     public void onClick(View v) {
+						//actualiza BD
+					db.updatePomodoro(
+							Long.parseLong(pomTxtId.getText().toString()),
+							pomTxtName.getText().toString(),
+							(long) (pomBarEstimated.getProgress() + 1));
+						miDialog.dismiss();
+						cargarDatosLista();
+			     }
+			 });   
+			Button btnCancel = (Button) miDialog.findViewById(R.id.btnFrmCancel);
+			btnCancel.setOnClickListener(new OnClickListener() {
+			     public void onClick(View v) {
+			    	 miDialog.dismiss();
+			     }
+			});
 	    	miDialog.show();//importante
 			break;
 		case R.id.menu_eliminar:
-			/*db.eliminarPersona(ids.get(index));
-			ids.remove(index);
-			cargarDatosLista();*/
+			AlertDialog.Builder aDialog = new AlertDialog.Builder(that);
+			aDialog.setTitle(R.string.TitleDelete);
+			aDialog.setMessage(R.string.confirmDelete);
+			aDialog.setPositiveButton(R.string.yes,
+					new AlertDialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							db.deletePomodoro(id);
+							ids.remove(index);
+							cargarDatosLista();
+						}
+					});
+			aDialog.setNegativeButton(R.string.no,
+					new AlertDialog.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							//Cancel Option doesn't do anything 
+						}
+					});
+
+			aDialog.create();
+			aDialog.show();
 			break;
 		}
 		return super.onContextItemSelected(item);
@@ -179,11 +296,14 @@ public class MainActivity extends Activity {
 				int id = cur.getInt(0);
 				String name = cur.getString(1);
 				String type = cur.getString(2);
-				int pomodoros = cur.getInt(3);
+				int estimated = cur.getInt(3);
+				int pomodoros = cur.getInt(4);
+				int unplanned = cur.getInt(5);
+				int interruptions = cur.getInt(6);
 				ids.add((long) id);// array de posiciones
 				// if (sexo.equals("m")) {
 				adaptadorLista.adicionarItem(R.drawable.ic_launcher, name, type
-						+ "\n" + pomodoros);
+						+ "\nE: " + estimated+" P: "+pomodoros+" U: "+unplanned+" I: "+interruptions);
 				/*
 				 * } else {
 				 * adaptadorLista.adicionarItem(R.drawable.ic_action_mujer,
@@ -325,7 +445,14 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
 	}
-
+	
+	void savePomodoro(View view){
+		
+	}
+	void cancelPomodoro(View view){
+		
+	}
+	
 	private static class pomodoro {
 
 		public pomodoro() {
