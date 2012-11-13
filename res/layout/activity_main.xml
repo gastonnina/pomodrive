@@ -22,16 +22,17 @@
         android:text="@string/reloj"
         android:textSize="100sp"
         tools:context=".MainActivity" />
+    <!-- android:background="@drawable/play_icon" -->
+
     <Button
         android:id="@+id/btnTimer"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/play_icon"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="110dp"
+        android:drawableLeft="@drawable/ico_play"
         android:onClick="startPomodoro"
-        android:text="Start" />
+        android:text="@string/lblStart" />
 
     <Chronometer
         android:id="@+id/chrono"

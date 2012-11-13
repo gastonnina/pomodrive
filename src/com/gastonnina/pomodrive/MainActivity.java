@@ -7,9 +7,9 @@ import java.util.Date;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
 		registerForContextMenu(lista);
 		//MainActivity that = this;
 		db = new PomodoroDatabaseAdapter(this);
-
+		
 		toast = new Toast(this);
 		relojb = (Chronometer) findViewById(R.id.chrono);
 		pomodoro = new pomodoro();
@@ -115,9 +115,64 @@ public class MainActivity extends Activity {
 
 	}
 	
+	void setPomodoroLenght(long t) {
+		pomodoroLength = t * minute;
+	}
+
+	void setTimeShortBreakLength(long t) {
+		timeShortBreakLength = t * minute;
+	}
+
+	void setTimeLongBreakLength(long t) {
+		timeLongBreakLength = t * minute;
+	}
+
+	void settimeLongBreakInterval(long t) {
+		timeLongBreakInterval = 4;
+	}
+
+	/**
+	 * Rescata y configura tiempos de pomodoro
+	 */
+	void setConfig() {
+		Log.i("INFO", "Dentro de config setp 1");
+		Cursor curq = db.getAllConfigs();
+		Log.i("INFO", "Dentro de config setp 2");
+		int cc = 0;
+		idsC[0] = 0;
+		idsC[1] = 0;
+		idsC[2] = 0;
+		idsC[3] = 0;
+		Log.i("INFO", "Dentro de config setp 3");
+		if (curq.moveToFirst()) {
+			Log.i("INFO", "Dentro de config setp 4");
+			do {
+				if (cc < 4) {
+					String name = curq.getString(0);
+					String value = curq.getString(1);
+					Log.i("INFO", "RECUPERADP--" + name + "===" + value);
+					if (name.equals("pomodoroLength")) {
+						idsC[0] = Integer.parseInt(value);
+						setPomodoroLenght((long) idsC[0]);
+					} else if (name.equals("time.shortBreakLength")) {
+						idsC[1] = Integer.parseInt(value);
+						setTimeShortBreakLength((long) idsC[1]);
+					} else if (name.equals("time.longBreakLength")) {
+						idsC[2] = Integer.parseInt(value);
+						setTimeLongBreakLength((long) idsC[2]);
+					} else if (name.equals("time.longBreakInterval")) {
+						idsC[3] = Integer.parseInt(value);
+						settimeLongBreakInterval((long) idsC[3]);
+					}
+				}
+				cc++;
+			} while (curq.moveToNext());
+		}
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.i("INFO","opcion---"+item.getItemId());
+		//Log.i("INFO","opcion---"+item.getItemId());
 		final Dialog miDialog = new Dialog(that);
 		switch (item.getItemId()) {
 		case R.id.menu_adicionar:
@@ -238,33 +293,8 @@ public class MainActivity extends Activity {
 											+ ": " + (paramInt + 1));
 						}
 					});
+				setConfig();
 				
-				Cursor curq = db.getAllConfigs();
-				int cc=0;
-			idsC[0] = 0;
-			idsC[1] = 0;
-			idsC[2] = 0;
-			idsC[3] = 0;
-
-			if (curq.moveToFirst()) {
-				do {
-					if (cc < 4) {
-						String name = curq.getString(0);
-						String value = curq.getString(1);
-						Log.i("INFO", "RECUPERADP--" + name + "===" + value);
-						if (name.equals("pomodoroLength")) {
-							idsC[0] = Integer.parseInt(value);
-						} else if (name.equals("time.shortBreakLength")) {
-							idsC[1] = Integer.parseInt(value);
-						} else if (name.equals("time.longBreakLength")) {
-							idsC[2] = Integer.parseInt(value);
-						} else if (name.equals("time.longBreakInterval")) {
-							idsC[3] = Integer.parseInt(value);
-						}
-					}
-					cc++;
-				} while (curq.moveToNext());
-			}
 			
 			lblCnfPomLength.setText(getString(R.string.strLblCnfPomLength) + ": "+ idsC[0]);
 			cnfBarPomLength.setProgress((int) (idsC[0] - 1));
@@ -282,18 +312,19 @@ public class MainActivity extends Activity {
 				Button btnCnfSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
 				
 				btnCnfSave.setOnClickListener(new OnClickListener() {
-				     public void onClick(View v) {
-				    	 
-							//actualiza BD	
-				    	 db.updateConfig("pomodoroLength",String.valueOf((cnfBarPomLength.getProgress()+1)));
-				    	 
-				    	 db.updateConfig("time.shortBreakLength",String.valueOf((cnfBarBrkShortLength.getProgress()+1)));
-				    	 
-				    	 db.updateConfig("time.longBreakLength",String.valueOf((cnfBarBrkLongLength.getProgress()+1)));
-				    	 
-				    	 db.updateConfig("time.longBreakInterval",cnfBrkLongInterval.getText().toString());
-							miDialog.dismiss();
-				     }
+				public void onClick(View v) {
+
+					// actualiza BD
+					db.updateConfig("pomodoroLength", String.valueOf((cnfBarPomLength.getProgress() + 1)));
+
+					db.updateConfig("time.shortBreakLength", String.valueOf((cnfBarBrkShortLength.getProgress() + 1)));
+
+					db.updateConfig("time.longBreakLength", String.valueOf((cnfBarBrkLongLength.getProgress() + 1)));
+
+					db.updateConfig("time.longBreakInterval", cnfBrkLongInterval.getText().toString());
+					setConfig();
+					miDialog.dismiss();
+				}
 				 });   
 				Button btnCnfCancel = (Button) miDialog.findViewById(R.id.btnFrmCancel);
 				btnCnfCancel.setOnClickListener(new OnClickListener() {
@@ -416,6 +447,9 @@ public class MainActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		db.abrir();
+		//cargamos datos de BD para el reloj
+		setConfig();
+		lblReloj.setText(sdf.format(pomodoroLength));
 		cargarDatosLista();
 	}
 
@@ -450,9 +484,11 @@ public class MainActivity extends Activity {
 	public void startBucle() {
 		if (!isTimeBreak) {
 			//btnTimer.setBackground(getResources().getDrawable(R.drawable.stop_icon));
-			btnTimer.setBackgroundResource(R.drawable.stop_icon);
+			Drawable img = getResources().getDrawable( R.drawable.ico_stop );
+			btnTimer.setCompoundDrawablesWithIntrinsicBounds( img, null, null, null );
+			//btnTimer.setBackgroundResource(R.drawable.ico_stop);
 			
-			btnTimer.setText("Stop");
+			btnTimer.setText(getString(R.string.lblStop));
 			btnTimer.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -476,8 +512,10 @@ public class MainActivity extends Activity {
 	}
 
 	public void cancelBucle() {
-		btnTimer.setBackgroundResource(R.drawable.play_icon);
-		btnTimer.setText("Start");
+		Drawable img = getResources().getDrawable( R.drawable.ico_play );
+		btnTimer.setCompoundDrawablesWithIntrinsicBounds( img, null, null, null );
+		//btnTimer.setBackgroundResource(R.drawable.ico_play);
+		btnTimer.setText(getString(R.string.lblStart));
 		btnTimer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -522,7 +560,7 @@ public class MainActivity extends Activity {
 					countUp = (SystemClock.elapsedRealtime() - startTime);
 					countUp += 1000;
 					Log.i(TAG, "waited--" + waited + "--" + countUp);
-					// countUp = countUp / 1000;
+					// countUp = countUp / 1000;sdf.format(rdate)
 					// Log.i(TAG,"2_countUp="+countUp);
 					// Log.i(TAG,"arg0="+arg0.getBase());
 					if (waited >= countUp) {
@@ -564,7 +602,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void startLongBreak(View view) {
-
 		lblReloj.setTextAppearance(this, R.style.PomodriveTheme_redGoogleAlpha);
 		if (!isFirstTime)
 			reloj.cancel();

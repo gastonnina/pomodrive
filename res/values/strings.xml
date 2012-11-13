@@ -26,6 +26,8 @@
     
     <string name="yes">SI</string>
     <string name="no">NO</string>
+    <string name="lblStart">Iniciar</string>
+    <string name="lblStop">Detener</string>
     
     <!-- config pomodoro -->
     <string name="strLblCnfPomLength">Pomodoro length</string>
