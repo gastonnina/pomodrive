@@ -1,5 +1,6 @@
 package com.gastonnina.pomodrive;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +11,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -43,7 +45,8 @@ public class MainActivity extends Activity {
 	Button btnTimer;
 	CountDownTimer reloj;
 	Chronometer relojb;
-	long minute = 60000;
+	long minute = 60000;//minuto real
+	//long minute = 5000;//5 segundos
 	// long minute =1000;
 	long second = 1000;
 	long pomodoroLength = 25 * minute;// 25//5
@@ -54,11 +57,13 @@ public class MainActivity extends Activity {
 	long usedPomodoro = 0;
 	long estimatedPomodoro = 0;
 	long waited = 0;
+	
 
 	Toast toast;
 
 	boolean isFirstTime = true;
 	boolean isTimeBreak = false;
+	boolean isTimeShortBreak = true;
 
 	long startTime;
 	long countUp;
@@ -76,12 +81,16 @@ public class MainActivity extends Activity {
 	private ArrayList<Long> ids = new ArrayList<Long>();
 	//IDS Config
 	private int[] idsC = new int[5];
-	
+	private MediaPlayer mp1, mp2;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		mp1 = new MediaPlayer();
+		mp2 = new MediaPlayer();
+		
+		
 		lista = (ListView) findViewById(R.id.taskList);
 		//lista.setOnItemClickListener(this);
 		adaptadorLista = new ListaNormalAdapter(this);
@@ -452,7 +461,22 @@ public class MainActivity extends Activity {
 		lblReloj.setText(sdf.format(pomodoroLength));
 		cargarDatosLista();
 	}
-
+	void playSoundShort(){
+		mp1 = MediaPlayer.create(this, R.raw.sound_short);
+		mp1.start();
+	}
+	public void stopSoundShort() {
+		mp1.stop();
+		mp1.release();
+	}
+	void playSoundLong(){
+		mp2 = MediaPlayer.create(this, R.raw.sound_long);
+		mp2.start();
+	}
+	public void stopSoundLong() {
+		mp2.stop();
+		mp2.release();
+	}
 	public void cargarDatosLista() {
 		// Limpiamos la lista
 		ids.clear(); // Borramos la lista
@@ -482,10 +506,11 @@ public class MainActivity extends Activity {
 	}
 
 	public void startBucle() {
+		Log.i(TAG_RELOJ,"--->INICIA BUCLE");
 		if (!isTimeBreak) {
 			//btnTimer.setBackground(getResources().getDrawable(R.drawable.stop_icon));
-			Drawable img = getResources().getDrawable( R.drawable.ico_stop );
-			btnTimer.setCompoundDrawablesWithIntrinsicBounds( img, null, null, null );
+			//Drawable img = getResources().getDrawable( R.drawable.ico_stop );
+			btnTimer.setCompoundDrawablesWithIntrinsicBounds( getResources().getDrawable( R.drawable.ico_stop ), null, null, null );
 			//btnTimer.setBackgroundResource(R.drawable.ico_stop);
 			
 			btnTimer.setText(getString(R.string.lblStop));
@@ -493,18 +518,24 @@ public class MainActivity extends Activity {
 
 				@Override
 				public void onClick(View v) {
+					Log.i(TAG_RELOJ,"CLICK STOP");
 					cancelBucle();
 				}
 			});
+			Log.i(TAG_RELOJ,"INICIA POMODORO");
 			startPomodoro(lblReloj);
 		} else {
-
+			Log.i(TAG_RELOJ,"INICIA DESCASO");
 			long modu = (countPomodoro % timeLongBreakInterval);
-			Log.d(TAG, "--" + countPomodoro + "-%--" + timeLongBreakInterval
+			Log.d(TAG_INFO, "--" + countPomodoro + "-%--" + timeLongBreakInterval
 					+ "==" + modu);
 			if (modu == 0) {
+				Log.i(TAG_RELOJ,"INICIA DESCASO LARGO");
+				isTimeShortBreak=false;
 				startLongBreak(lblReloj);// long break
 			} else {
+				Log.i(TAG_RELOJ,"INICIA DESCASO CORTO");
+				isTimeShortBreak=true;
 				startShortBreak(lblReloj);// short break
 			}
 		}
@@ -512,13 +543,42 @@ public class MainActivity extends Activity {
 	}
 
 	public void cancelBucle() {
-		Drawable img = getResources().getDrawable( R.drawable.ico_play );
-		btnTimer.setCompoundDrawablesWithIntrinsicBounds( img, null, null, null );
+		//FIXME - para que no maneje try
+		Log.i(TAG_RELOJ, "CANCELA SONIDO");
+		try {
+			stopSoundShort();
+		} catch (Exception e) {
+			Log.e("ERROR", "SONIDO-corto-" + e.getMessage());
+		}
+		try {
+
+			stopSoundLong();
+		} catch (Exception e) {
+			Log.e("ERROR", "SONIDO-largo-" + e.getMessage());
+		}
+		try {
+			reloj.cancel();
+		} catch (Exception e) {
+			Log.e("ERROR", "RELOJ-DOWN-" + e.getMessage());
+		}
+		try {
+			relojb.stop();
+		} catch (Exception e) {
+			Log.e("ERROR", "RELOJB-UP-" + e.getMessage());
+		}
+		
+		
+		
+		
+		Log.i(TAG_RELOJ,"CANCELA ACTO");
+		//Drawable img = getResources().getDrawable( R.drawable.ico_play );
+		btnTimer.setCompoundDrawablesWithIntrinsicBounds( getResources().getDrawable( R.drawable.ico_play ), null, null, null );
 		//btnTimer.setBackgroundResource(R.drawable.ico_play);
 		btnTimer.setText(getString(R.string.lblStart));
 		btnTimer.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Log.i(TAG_RELOJ,"CLICK START");		
 				isTimeBreak = false;
 				startBucle();
 			}
@@ -527,6 +587,7 @@ public class MainActivity extends Activity {
 
 	public void contador(long... ls) {
 		isFirstTime = false;
+		Log.i(TAG_RELOJ,"contador--->countPomodoro---->"+countPomodoro);
 
 		if (ls[1] == 1) {
 			isFirstTime = true;
@@ -559,7 +620,7 @@ public class MainActivity extends Activity {
 					// arg0.getBase());
 					countUp = (SystemClock.elapsedRealtime() - startTime);
 					countUp += 1000;
-					Log.i(TAG, "waited--" + waited + "--" + countUp);
+					//////Log.i(TAG, "waited--" + waited + "--" + countUp);
 					// countUp = countUp / 1000;sdf.format(rdate)
 					// Log.i(TAG,"2_countUp="+countUp);
 					// Log.i(TAG,"arg0="+arg0.getBase());
@@ -573,6 +634,11 @@ public class MainActivity extends Activity {
 
 					} else {
 						relojb.stop();
+						if(isTimeShortBreak){//corto
+							playSoundShort();
+						}else{//largo
+							playSoundLong();
+						}
 					}
 				}
 			});
@@ -581,6 +647,8 @@ public class MainActivity extends Activity {
 	}
 
 	private static final String TAG = "MainActivity";
+	private static final String TAG_INFO = "INFO";
+	private static final String TAG_RELOJ = "RELOJ";
 
 	public void startPomodoro(View view) {
 		isTimeBreak = false;
@@ -601,12 +669,11 @@ public class MainActivity extends Activity {
 		isTimeBreak = false;
 	}
 
-	public void startLongBreak(View view) {
+	public void startLongBreak(View view) {		
 		lblReloj.setTextAppearance(this, R.style.PomodriveTheme_redGoogleAlpha);
 		if (!isFirstTime)
 			reloj.cancel();
 		contador(timeLongBreakLength, 1000);
-
 		relojb.start();
 	}
 
