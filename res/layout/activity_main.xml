@@ -10,7 +10,15 @@
         android:layout_alignParentLeft="true"
         android:adjustViewBounds="false"
         android:scaleType="centerCrop"
+        android:contentDescription="@string/pomodrive"
         android:src="@drawable/pomodoro" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:progress="80" />
 
     <TextView
         android:id="@+id/lblReloj"
@@ -26,13 +34,22 @@
 
     <Button
         android:id="@+id/btnTimer"
-        android:layout_width="150dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="110dp"
+        style="@style/PomodriveTheme.grid2"
         android:drawableLeft="@drawable/ico_play"
         android:onClick="startPomodoro"
         android:text="@string/lblStart" />
+    <Button
+        android:id="@+id/btnTimer2"
+        style="@style/PomodriveTheme.grid0"
+        android:text="@string/lblDone" />
+
+    <TextView
+        android:id="@+id/lblCurTask"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="180dp"
+        android:padding="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <Chronometer
         android:id="@+id/chrono"
@@ -40,7 +57,7 @@
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Chronometer" />
+        />
 
     <SlidingDrawer
         android:id="@+id/slidingDrawer1"
@@ -75,7 +92,5 @@
         
 
     </SlidingDrawer>
-
-    
 
 </RelativeLayout>

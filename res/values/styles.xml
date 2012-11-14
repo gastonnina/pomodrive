@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<style name="AppTheme" parent="android:Theme.Light" />
  	<style name="PomodriveTheme">
 		<item name="android:typeface">serif</item>
@@ -21,4 +21,37 @@
 	<style name="PomodriveTheme.greenGoogle">
 	    <item name="android:textColor">#ACF243</item>
 	</style>
+	<style name="PomodriveTheme.grid2">
+	    <item name="android:layout_width">150dp</item>
+	    <item name="android:layout_height">60dp</item>
+	    <item name="android:layout_centerHorizontal">true</item>
+	    <item name="android:layout_marginTop">110dp</item>
+	</style>
+	
+	<style name="PomodriveTheme.grid1">
+	    <item name="android:layout_width">120dp</item>
+	    <item name="android:layout_height">60dp</item>
+	    <item name="android:layout_marginTop">110dp</item>
+	</style>
+	<style name="PomodriveTheme.grid1.left">
+	    <item name="android:layout_alignParentLeft">true</item>
+	    <item name="android:layout_alignParentTop">true</item>
+	    <item name="android:layout_marginLeft">40dp</item>
+	</style>
+	<style name="PomodriveTheme.grid1.right">
+	    <item name="android:layout_alignParentRight">true</item>
+	    <item name="android:layout_alignParentTop">true</item>
+	    <item name="android:layout_marginRight">40dp</item>
+	</style>
+	<style name="PomodriveTheme.grid0">
+	    <item name="android:visibility">gone</item>
+	    <item name="android:layout_width">0dp</item>
+	    <item name="android:layout_height">0dp</item>
+	</style>
+	<style name="PomodriveTheme.detail">
+	    <item name="android:layout_width">fill_parent</item>
+	    <item name="android:layout_height">wrap_content</item>
+	    <item name="android:padding">5dp</item>
+	</style>
+	    
 </resources>

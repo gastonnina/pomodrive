@@ -45,7 +45,7 @@ public class PomodoroDatabaseAdapter {
 
 	public Cursor getPomodoroById(long id) {
 		Log.i("INFO", "el id es --->" + id);
-		return db.query("pomodoro", new String[] { "id", "name", "estimated" },
+		return db.query("pomodoro", new String[] { "id", "name", "estimated", "pomodoros", "unplanned", "interruptions" },
 				"id=?", new String[] { id + "" }, null, null, null);
 	}
 

@@ -1,6 +1,5 @@
 package com.gastonnina.pomodrive;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,7 +9,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -24,11 +22,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.Chronometer.OnChronometerTickListener;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +42,7 @@ import com.gastonnina.pomodrive.db.PomodoroDatabaseAdapter;
  */
 public class MainActivity extends Activity {
 	MainActivity that = this;
-	TextView lblReloj;
+	TextView lblReloj,lblCurTask;
 	Button btnTimer;
 	CountDownTimer reloj;
 	Chronometer relojb;
@@ -90,6 +91,7 @@ public class MainActivity extends Activity {
 		mp1 = new MediaPlayer();
 		mp2 = new MediaPlayer();
 		
+		lblCurTask = (TextView) findViewById(R.id.lblCurTask);
 		
 		lista = (ListView) findViewById(R.id.taskList);
 		//lista.setOnItemClickListener(this);
@@ -98,11 +100,23 @@ public class MainActivity extends Activity {
 		lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> padre, View itemClickeado,
 					int posicion, long id) {
+				long id1 = ids.get(posicion);
+				//FIXME poner curent para almacenar en BD con cada pomodoro
 				// Acá el código para cada item
+				Cursor cursor_show = db.getPomodoroById(id1);
+				if (cursor_show.moveToFirst()) {
+					String name = cursor_show.getString(1);
+					int estimated = cursor_show.getInt(2);
+					int pomodoros = cursor_show.getInt(3);
+					lblCurTask.setText(""+name+" ("+pomodoros+"/"+estimated+")");
+					SlidingDrawer slidingDrawer1 = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
+					slidingDrawer1.animateClose();
+				}
+				/*
 				Toast t1 = Toast.makeText(that, "Se presiono "
 						+ posicion, Toast.LENGTH_LONG);
 				//
-				t1.show();
+				t1.show();*/
 			}
 		});
 		registerForContextMenu(lista);
@@ -365,6 +379,40 @@ public class MainActivity extends Activity {
 		final long id = ids.get(index);
 		
 		switch (item.getItemId()) {
+		case R.id.menu_show:
+			final Dialog miDialogShow = new Dialog(that);
+			miDialogShow.setContentView(R.layout.activity_detail);
+			miDialogShow.setTitle(R.string.TitleShow);
+	    	
+	    	Cursor cursor_show = db.getPomodoroById(id);
+	    	
+	    	if (cursor_show.moveToFirst()) {
+				String name = cursor_show.getString(1);
+				int estimated = cursor_show.getInt(2);
+				int pomodoros = cursor_show.getInt(3);
+				int unplanned = cursor_show.getInt(4);
+				int interruptions = cursor_show.getInt(5);
+				final String[] numbers = new String[] { 
+						"E: "+estimated, "P:"+pomodoros, 
+						"U: "+unplanned, "I: "+interruptions};	
+				TextView lblDetTxtTask=(TextView) miDialogShow.findViewById(R.id.lblDetTxtTask);
+		    	GridView gridView = (GridView) miDialogShow.findViewById(R.id.gridView1);
+		    	 
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+						android.R.layout.simple_list_item_1, numbers);
+		 
+				gridView.setAdapter(adapter);
+				
+				lblDetTxtTask.setText(""+name);
+			}
+	    	Button btnCancelShow = (Button) miDialogShow.findViewById(R.id.btnFrmCancel);
+			btnCancelShow.setOnClickListener(new OnClickListener() {
+			     public void onClick(View v) {
+			    	 miDialogShow.dismiss();
+			     }
+			});
+	    	miDialogShow.show();//importante
+			break;
 		case R.id.menu_editar:
 			/*Intent intent = new Intent(this, FormularioActivity.class);
 			intent.putExtra("id", ids.get(index));

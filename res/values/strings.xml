@@ -7,6 +7,9 @@
     <string name="title_activity_list">Lista de tareas</string>
     <string name="reloj">25:00</string>
     <string name="adicionar">Adicionar</string>
+    
+    <string name="show">Detalle</string>
+    <string name="turnDone">Hecho On/Off</string>
     <string name="editar">Editar</string>
     <string name="eliminar">Eliminar</string>
     
@@ -17,6 +20,7 @@
     <string name="estimated">Estimado</string>
     
     <string name="TitleConfig">Configurar Tiempos</string>
+    <string name="TitleShow">Detalle de Pomodoro</string>
     <string name="TitleAdd">Adicionar Pomodoro</string>
     <string name="TitleEdit">Editar Pomodoro</string>
     <string name="TitleDelete">Eliminar Pomodoro</string>
@@ -28,6 +32,8 @@
     <string name="no">NO</string>
     <string name="lblStart">Iniciar</string>
     <string name="lblStop">Detener</string>
+    <string name="lblDone">Hecho</string>
+    <string name="lblNext">Siguiente</string>
     
     <!-- config pomodoro -->
     <string name="strLblCnfPomLength">Pomodoro length</string>
