@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -46,8 +47,8 @@ public class MainActivity extends Activity {
 	Button btnTimer;
 	CountDownTimer reloj;
 	Chronometer relojb;
-	long minute = 60000;//minuto real
-	//long minute = 5000;//5 segundos
+	//long minute = 60000;//minuto real
+	long minute = 5000;//5 segundos
 	// long minute =1000;
 	long second = 1000;
 	long pomodoroLength = 25 * minute;// 25//5
@@ -65,13 +66,15 @@ public class MainActivity extends Activity {
 	boolean isFirstTime = true;
 	boolean isTimeBreak = false;
 	boolean isTimeShortBreak = true;
+	
+	
 
 	long startTime;
 	long countUp;
 	// The pomodors are less than an one hour
 	SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
 	Date rdate;
-	private pomodoro pomodoro;
+	private curPomodoro curPom;
 
 	// Lista
 	private ListView lista;
@@ -88,6 +91,9 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		Typeface font = Typeface.createFromAsset(getAssets(),
+				"fonts/roboto_thin.ttf");
+		
 		mp1 = new MediaPlayer();
 		mp2 = new MediaPlayer();
 		
@@ -103,15 +109,9 @@ public class MainActivity extends Activity {
 				long id1 = ids.get(posicion);
 				//FIXME poner curent para almacenar en BD con cada pomodoro
 				// Acá el código para cada item
-				Cursor cursor_show = db.getPomodoroById(id1);
-				if (cursor_show.moveToFirst()) {
-					String name = cursor_show.getString(1);
-					int estimated = cursor_show.getInt(2);
-					int pomodoros = cursor_show.getInt(3);
-					lblCurTask.setText(""+name+" ("+pomodoros+"/"+estimated+")");
-					SlidingDrawer slidingDrawer1 = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
-					slidingDrawer1.animateClose();
-				}
+				ponerActual(id1);
+				SlidingDrawer slidingDrawer1 = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
+				slidingDrawer1.animateClose();
 				/*
 				Toast t1 = Toast.makeText(that, "Se presiono "
 						+ posicion, Toast.LENGTH_LONG);
@@ -125,9 +125,14 @@ public class MainActivity extends Activity {
 		
 		toast = new Toast(this);
 		relojb = (Chronometer) findViewById(R.id.chrono);
-		pomodoro = new pomodoro();
+		curPom = new curPomodoro();
 		lblReloj = (TextView) findViewById(R.id.lblReloj);
 		btnTimer = (Button) findViewById(R.id.btnTimer);
+		
+		//fuente
+		lblReloj.setTypeface(font);
+		btnTimer.setTypeface(font);
+		
 		btnTimer.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -525,11 +530,33 @@ public class MainActivity extends Activity {
 		mp2.stop();
 		mp2.release();
 	}
+	public void ponerActual(long id){
+		Cursor cursor_show = db.getPomodoroById(id);
+		if (cursor_show.moveToFirst()) {
+			
+			String name = cursor_show.getString(1);
+			int estimated = cursor_show.getInt(2);
+			int pomodoros = cursor_show.getInt(3);
+			lblCurTask.setText(""+name+" ("+pomodoros+"/"+estimated+")");
+			//put
+			curPom.id=id;
+			curPom.name=name;
+			curPom.pomodoros=pomodoros;
+			curPom.estimated=estimated;
+		}
+	}
 	public void cargarDatosLista() {
 		// Limpiamos la lista
 		ids.clear(); // Borramos la lista
 		adaptadorLista.eliminarTodo(); // Borramos en contenido de la ListView
 		Cursor cur = db.getAllPomodoros();
+		if(cur.getCount()>0){
+			if(cur.getCount()<2){
+				btnTimer.setTextAppearance(this, R.style.PomodriveTheme_grid2);
+			}else{
+				btnTimer.setTextAppearance(this, R.style.PomodriveTheme_grid1);
+			}
+		
 		if (cur.moveToFirst()) {
 			do {
 				int id = cur.getInt(0);
@@ -550,6 +577,10 @@ public class MainActivity extends Activity {
 				 */
 			} while (cur.moveToNext());
 		}
+		}else{
+			btnTimer.setTextAppearance(this, R.style.PomodriveTheme_grid0);
+		}
+		
 		adaptadorLista.notifyDataSetChanged();
 	}
 
@@ -651,6 +682,9 @@ public class MainActivity extends Activity {
 					// //sleep(second);
 					lblReloj.setText("00:00");
 					countPomodoro++;
+					db.updatePomodoroByClock(curPom.id);
+					cargarDatosLista();
+					ponerActual(curPom.id);
 					startBucle();
 				}
 			};
@@ -738,19 +772,18 @@ public class MainActivity extends Activity {
 		
 	}
 	
-	private static class pomodoro {
-
-		public pomodoro() {
+	private static class curPomodoro {
+		public long id=0;
+		public String name="";
+		public long pomodoros=0;
+		public long estimated=0;
+		public long unplanned=0;
+		public long interruptions=0;
+		public long created=0;
+		public curPomodoro() {
 			super();
-
 		}
 
-		public void Reloj() {
 
-		}
-
-		public void startShortPomodoro(View view) {
-
-		}
 	}
 }

@@ -1,5 +1,8 @@
 package com.gastonnina.pomodrive.db;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,9 +14,10 @@ public class PomodoroDatabaseAdapter {
 
 	private PomodoroDatabaseHelper databaseHelper;
 	private SQLiteDatabase db;
-
+	SimpleDateFormat dateFormat;
 	public PomodoroDatabaseAdapter(Context context) {
 		databaseHelper = new PomodoroDatabaseHelper(context);
+		dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
 	public void abrir() {
@@ -26,12 +30,28 @@ public class PomodoroDatabaseAdapter {
 
 	public long insertPomodoro(String name, long estimated) {
 		ContentValues contentValues = new ContentValues();
+		contentValues.put("type", "Pomodoro");
 		contentValues.put("name", name);
 		contentValues.put("estimated", estimated);
-		contentValues.put("type", "Pomodoro");
+		contentValues.put("pomodoros", 0);
+		contentValues.put("unplanned", 0);
+		contentValues.put("interruptions", 0);
+		contentValues.put("ordinal", 0);
+		contentValues.put("visible", 1);
+		contentValues.put("parent", 0);
+		contentValues.put("done", 0);
+		 
+		Date date = new Date();
+		ContentValues initialValues = new ContentValues(); 
+		initialValues.put("created", dateFormat.format(date));
+		
 		return db.insert("pomodoro", null, contentValues);
 	}
-
+	public void updatePomodoroByClock(long id){
+		String sql = "UPDATE pomodoro SET pomodoros=pomodoros+1 WHERE id=" + id+"";
+		//Log.i("QUERY", "-->" + sql);
+		db.execSQL(sql);
+	}
 	public int updatePomodoro(long id, String name, long estimated) {
 		ContentValues cVal = new ContentValues();
 		cVal.put("name", name);
