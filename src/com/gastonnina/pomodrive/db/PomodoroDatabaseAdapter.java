@@ -3,29 +3,49 @@ package com.gastonnina.pomodrive.db;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Binder;
+import android.os.IBinder;
 import android.util.Log;
 
-public class PomodoroDatabaseAdapter {
+public class PomodoroDatabaseAdapter extends Service {
+	private final IBinder mBinder = new LocalBinder();
 
-	private PomodoroDatabaseHelper databaseHelper;
+	//private PomodoroDatabaseHelper databaseHelper;
+	private DBHelper dbHelper;
 	private SQLiteDatabase db;
 	SimpleDateFormat dateFormat;
+	
+	public class LocalBinder extends Binder {
+		public PomodoroDatabaseAdapter getService() {
+			return PomodoroDatabaseAdapter.this;
+		}
+	}
+	@Override
+	public IBinder onBind(Intent arg0) {
+		return mBinder;
+	}
+
 	public PomodoroDatabaseAdapter(Context context) {
-		databaseHelper = new PomodoroDatabaseHelper(context);
+		//databaseHelper = new PomodoroDatabaseHelper(context);
+		dbHelper = new DBHelper(context);
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
 	public void abrir() {
-		db = databaseHelper.getWritableDatabase();
+		//db = databaseHelper.getWritableDatabase();
+		db = dbHelper.getDataBase();
 	}
 
 	public void cerrar() {
-		databaseHelper.close();
+		//databaseHelper.close();
+		db.close();
 	}
 
 	public long insertPomodoro(String name, long estimated) {
@@ -113,6 +133,4 @@ public class PomodoroDatabaseAdapter {
 			onCreate(db);
 		}
 	}
-
 }
-
