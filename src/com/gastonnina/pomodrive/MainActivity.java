@@ -8,9 +8,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -44,7 +46,7 @@ import com.gastonnina.pomodrive.db.PomodoroDatabaseAdapter;
 public class MainActivity extends Activity {
 	MainActivity that = this;
 	TextView lblReloj,lblCurTask;
-	Button btnTimer;
+	Button btnTimer,btnConfig,btnAdd;
 	CountDownTimer reloj;
 	Chronometer relojb;
 	//long minute = 60000;//minuto real
@@ -128,6 +130,8 @@ public class MainActivity extends Activity {
 		curPom = new curPomodoro();
 		lblReloj = (TextView) findViewById(R.id.lblReloj);
 		btnTimer = (Button) findViewById(R.id.btnTimer);
+		btnConfig = (Button) findViewById(R.id.btnConfig);
+		btnAdd = (Button) findViewById(R.id.btnAdd);
 		
 		//fuente
 		lblReloj.setTypeface(font);
@@ -206,161 +210,10 @@ public class MainActivity extends Activity {
 		case R.id.menu_adicionar:
 			/*Intent intent = new Intent(this, FormularioActivity.class);
 			startActivity(intent);*/
-	    	miDialog.setContentView(R.layout.form_pomodoro);
-	    	miDialog.setTitle(R.string.TitleAdd);
-	    		
-	    	
-			TextView pomTxtId = (TextView) miDialog.findViewById(R.id.pomTxtId);
-			final TextView pomTxtName = (TextView) miDialog.findViewById(R.id.pomTxtName);
-			final TextView lblFrmTxtEstimated = (TextView) miDialog.findViewById(R.id.lblFrmTxtEstimated);
-			final SeekBar pomBarEstimated = (SeekBar) miDialog.findViewById(R.id.pomBarEstimated);
-			
-			pomBarEstimated
-					.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-						public void onStopTrackingTouch(SeekBar bar) {
-							// txt2.setText("seekbar has been stop");
-						}
-
-						public void onStartTrackingTouch(SeekBar bar) {
-							// txt2.setText("seekbar has started");
-						}
-
-						public void onProgressChanged(SeekBar bar,
-								int paramInt, boolean paramBoolean) {
-							lblFrmTxtEstimated.setText(getString(R.string.lblEstimated)
-									+ ": " + (paramInt + 1));
-						}
-	         });
-	    	pomTxtId.setText("");
-	    	pomTxtName.setText("");
-	    	lblFrmTxtEstimated.setText(getString(R.string.lblEstimated)+ ": 1");
-	    	pomBarEstimated.setProgress(0);
-
-			//FIXME - mover a un general
-			//Recojemos el boton para anadirle una accion
-			Button btnSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
-			
-			btnSave.setOnClickListener(new OnClickListener() {
-			     public void onClick(View v) {
-						//actualiza BD
-						db.insertPomodoro(pomTxtName.getText().toString(),(long) (pomBarEstimated.getProgress()+1));
-						miDialog.dismiss();
-						cargarDatosLista();
-			     }
-			 });   
-			Button btnCancel = (Button) miDialog.findViewById(R.id.btnFrmCancel);
-			btnCancel.setOnClickListener(new OnClickListener() {
-			     public void onClick(View v) {
-			    	 miDialog.dismiss();
-			     }
-			});
-	    	miDialog.show();//importante
+	    		addOption(btnAdd);
 			break;
 			case R.id.menu_settings:
-				miDialog.setContentView(R.layout.form_config);
-		    	miDialog.setTitle(R.string.TitleConfig);
-		    	
-				final TextView cnfBrkLongInterval = (TextView) miDialog.findViewById(R.id.cnfBrkLongInterval);
-				
-				final TextView lblCnfPomLength = (TextView) miDialog.findViewById(R.id.lblCnfPomLength);
-				final TextView lblCnfBrkShortLength = (TextView) miDialog.findViewById(R.id.lblCnfBrkShortLength);
-				final TextView lblCnfBrkLongLength = (TextView) miDialog.findViewById(R.id.lblCnfBrkLongLength);
-				
-				final SeekBar cnfBarPomLength = (SeekBar) miDialog.findViewById(R.id.cnfBarPomLength);
-				final SeekBar cnfBarBrkShortLength = (SeekBar) miDialog.findViewById(R.id.cnfBarBrkShortLength);
-				final SeekBar cnfBarBrkLongLength = (SeekBar) miDialog.findViewById(R.id.cnfBarBrkLongLength);
-				cnfBarPomLength
-						.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-							public void onStopTrackingTouch(SeekBar bar) {
-								// txt2.setText("seekbar has been stop");
-							}
-	
-							public void onStartTrackingTouch(SeekBar bar) {
-								// txt2.setText("seekbar has started");
-							}
-	
-							public void onProgressChanged(SeekBar bar,
-									int paramInt, boolean paramBoolean) {
-								lblCnfPomLength.setText(getString(R.string.strLblCnfPomLength)
-										+ ": " + (paramInt + 1));
-							}
-						});
-				cnfBarBrkShortLength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-					
-					@Override
-					public void onStopTrackingTouch(SeekBar bar) {
-					}
-					
-					@Override
-					public void onStartTrackingTouch(SeekBar bar) {
-					}
-					
-					@Override
-					public void onProgressChanged(SeekBar bar, 
-							int paramInt, boolean paramBoolean) {
-						lblCnfBrkShortLength.setText(getString(R.string.strLblCnfBrkShortLength)
-						+ ": " + (paramInt + 1));
-					}
-					});
-				cnfBarBrkLongLength
-					.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-						@Override
-						public void onStopTrackingTouch(SeekBar bar) {
-						}
-
-						@Override
-						public void onStartTrackingTouch(SeekBar bar) {
-						}
-
-						@Override
-						public void onProgressChanged(SeekBar bar,
-								int paramInt, boolean paramBoolean) {
-							lblCnfBrkLongLength
-									.setText(getString(R.string.strLblCnfBrkLongLength)
-											+ ": " + (paramInt + 1));
-						}
-					});
-				setConfig();
-				
-			
-			lblCnfPomLength.setText(getString(R.string.strLblCnfPomLength) + ": "+ idsC[0]);
-			cnfBarPomLength.setProgress((int) (idsC[0] - 1));
-			
-			lblCnfBrkShortLength.setText(getString(R.string.strLblCnfBrkShortLength) + ": " + idsC[1]);
-			cnfBarBrkShortLength.setProgress((int) (idsC[1]) - 1);
-			
-			lblCnfBrkLongLength.setText(getString(R.string.strLblCnfBrkLongLength) + ": " + idsC[2]);
-			cnfBarBrkLongLength.setProgress((int) (idsC[2]) - 1);
-			
-			cnfBrkLongInterval.setText(String.valueOf(idsC[3]));
-			
-				//FIXME - mover a un general
-				//Recojemos el boton para anadirle una accion
-				Button btnCnfSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
-				
-				btnCnfSave.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-
-					// actualiza BD
-					db.updateConfig("pomodoroLength", String.valueOf((cnfBarPomLength.getProgress() + 1)));
-
-					db.updateConfig("time.shortBreakLength", String.valueOf((cnfBarBrkShortLength.getProgress() + 1)));
-
-					db.updateConfig("time.longBreakLength", String.valueOf((cnfBarBrkLongLength.getProgress() + 1)));
-
-					db.updateConfig("time.longBreakInterval", cnfBrkLongInterval.getText().toString());
-					setConfig();
-					miDialog.dismiss();
-				}
-				 });   
-				Button btnCnfCancel = (Button) miDialog.findViewById(R.id.btnFrmCancel);
-				btnCnfCancel.setOnClickListener(new OnClickListener() {
-				     public void onClick(View v) {
-				    	 miDialog.dismiss();
-				     }
-				});
-		    	miDialog.show();//importante
+				configOption(btnConfig);
 			break;
 		}
 		//-- tiene que llamar a menu popup y de ese recien a editar
@@ -727,7 +580,191 @@ public class MainActivity extends Activity {
 		}
 
 	}
+	public void aboutOption(View view){
+		//TODO - hacer contenido dentro de un navegador
+		 //Uri uri = Uri.parse("http://www.gastonnina.com");
+		 Uri uri = Uri.parse("http://www.about.me/gastonnina");
+		 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		 startActivity(intent);
+	}
+	public void addOption(View view){
+		final Dialog miDialog = new Dialog(that);
+		miDialog.setContentView(R.layout.form_pomodoro);
+    	miDialog.setTitle(R.string.TitleAdd);
+    		
+    	
+		TextView pomTxtId = (TextView) miDialog.findViewById(R.id.pomTxtId);
+		final TextView pomTxtName = (TextView) miDialog.findViewById(R.id.pomTxtName);
+		final TextView lblFrmTxtEstimated = (TextView) miDialog.findViewById(R.id.lblFrmTxtEstimated);
+		final SeekBar pomBarEstimated = (SeekBar) miDialog.findViewById(R.id.pomBarEstimated);
+		
+		pomBarEstimated
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+					public void onStopTrackingTouch(SeekBar bar) {
+						// txt2.setText("seekbar has been stop");
+					}
 
+					public void onStartTrackingTouch(SeekBar bar) {
+						// txt2.setText("seekbar has started");
+					}
+
+					public void onProgressChanged(SeekBar bar,
+							int paramInt, boolean paramBoolean) {
+						lblFrmTxtEstimated.setText(getString(R.string.lblEstimated)
+								+ ": " + (paramInt + 1));
+					}
+         });
+    	pomTxtId.setText("");
+    	pomTxtName.setText("");
+    	lblFrmTxtEstimated.setText(getString(R.string.lblEstimated)+ ": 1");
+    	pomBarEstimated.setProgress(0);
+
+		//FIXME - mover a un general
+		//Recojemos el boton para anadirle una accion
+		Button btnSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
+		
+		btnSave.setOnClickListener(new OnClickListener() {
+		     public void onClick(View v) {
+					//actualiza BD
+					db.insertPomodoro(pomTxtName.getText().toString(),(long) (pomBarEstimated.getProgress()+1));
+					miDialog.dismiss();
+					cargarDatosLista();
+		     }
+		 });   
+		Button btnCancel = (Button) miDialog.findViewById(R.id.btnFrmCancel);
+		btnCancel.setOnClickListener(new OnClickListener() {
+		     public void onClick(View v) {
+		    	 miDialog.dismiss();
+		     }
+		});
+    	miDialog.show();//importante
+	}
+	public void configOption(View view){
+		final Dialog miDialog = new Dialog(that);
+		miDialog.setContentView(R.layout.form_config);
+		miDialog.setTitle(R.string.TitleConfig);
+
+		final TextView cnfBrkLongInterval = (TextView) miDialog
+				.findViewById(R.id.cnfBrkLongInterval);
+
+		final TextView lblCnfPomLength = (TextView) miDialog
+				.findViewById(R.id.lblCnfPomLength);
+		final TextView lblCnfBrkShortLength = (TextView) miDialog
+				.findViewById(R.id.lblCnfBrkShortLength);
+		final TextView lblCnfBrkLongLength = (TextView) miDialog
+				.findViewById(R.id.lblCnfBrkLongLength);
+
+		final SeekBar cnfBarPomLength = (SeekBar) miDialog
+				.findViewById(R.id.cnfBarPomLength);
+		final SeekBar cnfBarBrkShortLength = (SeekBar) miDialog
+				.findViewById(R.id.cnfBarBrkShortLength);
+		final SeekBar cnfBarBrkLongLength = (SeekBar) miDialog
+				.findViewById(R.id.cnfBarBrkLongLength);
+		cnfBarPomLength
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+					public void onStopTrackingTouch(SeekBar bar) {
+						// txt2.setText("seekbar has been stop");
+					}
+
+					public void onStartTrackingTouch(SeekBar bar) {
+						// txt2.setText("seekbar has started");
+					}
+
+					public void onProgressChanged(SeekBar bar,
+							int paramInt, boolean paramBoolean) {
+						lblCnfPomLength
+								.setText(getString(R.string.strLblCnfPomLength)
+										+ ": " + (paramInt + 1));
+					}
+				});
+		cnfBarBrkShortLength
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+					@Override
+					public void onStopTrackingTouch(SeekBar bar) {
+					}
+
+					@Override
+					public void onStartTrackingTouch(SeekBar bar) {
+					}
+
+					@Override
+					public void onProgressChanged(SeekBar bar,
+							int paramInt, boolean paramBoolean) {
+						lblCnfBrkShortLength
+								.setText(getString(R.string.strLblCnfBrkShortLength)
+										+ ": " + (paramInt + 1));
+					}
+				});
+		cnfBarBrkLongLength
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+					@Override
+					public void onStopTrackingTouch(SeekBar bar) {
+					}
+
+					@Override
+					public void onStartTrackingTouch(SeekBar bar) {
+					}
+
+					@Override
+					public void onProgressChanged(SeekBar bar,
+							int paramInt, boolean paramBoolean) {
+						lblCnfBrkLongLength
+								.setText(getString(R.string.strLblCnfBrkLongLength)
+										+ ": " + (paramInt + 1));
+					}
+				});
+		setConfig();
+
+		lblCnfPomLength.setText(getString(R.string.strLblCnfPomLength)
+				+ ": " + idsC[0]);
+		cnfBarPomLength.setProgress((int) (idsC[0] - 1));
+
+		lblCnfBrkShortLength
+				.setText(getString(R.string.strLblCnfBrkShortLength) + ": "
+						+ idsC[1]);
+		cnfBarBrkShortLength.setProgress((int) (idsC[1]) - 1);
+
+		lblCnfBrkLongLength
+				.setText(getString(R.string.strLblCnfBrkLongLength) + ": "
+						+ idsC[2]);
+		cnfBarBrkLongLength.setProgress((int) (idsC[2]) - 1);
+
+		cnfBrkLongInterval.setText(String.valueOf(idsC[3]));
+
+		// FIXME - mover a un general
+		// Recojemos el boton para anadirle una accion
+		Button btnCnfSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
+
+		btnCnfSave.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+
+				// actualiza BD
+				db.updateConfig("pomodoroLength",
+						String.valueOf((cnfBarPomLength.getProgress() + 1)));
+
+				db.updateConfig("time.shortBreakLength", String
+						.valueOf((cnfBarBrkShortLength.getProgress() + 1)));
+
+				db.updateConfig("time.longBreakLength", String
+						.valueOf((cnfBarBrkLongLength.getProgress() + 1)));
+
+				db.updateConfig("time.longBreakInterval",
+						cnfBrkLongInterval.getText().toString());
+				setConfig();
+				miDialog.dismiss();
+			}
+		});
+		Button btnCnfCancel = (Button) miDialog
+				.findViewById(R.id.btnFrmCancel);
+		btnCnfCancel.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				miDialog.dismiss();
+			}
+		});
+		miDialog.show();// importante
+	}
 	private static final String TAG = "MainActivity";
 	private static final String TAG_INFO = "INFO";
 	private static final String TAG_RELOJ = "RELOJ";

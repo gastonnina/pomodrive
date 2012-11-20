@@ -41,7 +41,5 @@
     <string name="strLblCnfBrkLongLength">Long break length</string>
     <string name="strLblCnfBrkLongInterval">Long break interval</string>
     
-    
-    
-    
+    <string name="author">Gaston Nina</string>
 </resources>

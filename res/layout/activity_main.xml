@@ -93,4 +93,33 @@
 
     </SlidingDrawer>
 
+    <Button
+        android:id="@+id/btnConfig"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:drawableLeft="@drawable/ico_config"
+        android:onClick="configOption"
+        android:minWidth="48dip" />
+    <Button
+        android:id="@+id/btnAbout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="48dp"
+        android:drawableLeft="@drawable/ico_foco"
+        android:onClick="aboutOption"
+        android:minWidth="48dip" />
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@drawable/ico_add"
+        android:onClick="addOption"
+        android:minWidth="48dip" />
+
 </RelativeLayout>
