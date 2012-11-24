@@ -599,6 +599,7 @@ public class MainActivity extends Activity {
 	 */
 	public void cleanOption(View view){
 		db.cleanDone();
+		cargarDatosLista();
 	}
 	public void addOption(View view){
 		final Dialog miDialog = new Dialog(that);
