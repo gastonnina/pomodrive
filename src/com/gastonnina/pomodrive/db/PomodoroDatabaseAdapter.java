@@ -89,12 +89,22 @@ public class PomodoroDatabaseAdapter extends Service {
 				"id=?", new String[] { id + "" }, null, null, null);
 	}
 	/**
+	 * SW para done o no done
+	 * @param id, id del pomodoro
+	 */
+	public void swDonePomodoro(long id) {
+		String sql = "UPDATE pomodoro SET done=NOT(done) WHERE id=" + id+"";
+		//Log.i("QUERY", "-interruption->" + sql);
+		db.execSQL(sql);
+	}
+	
+	/**
 	 * Listado de todos los pomodoros menos interrupciones
 	 * @return Cursor
 	 */
 	public Cursor getAllPomodoros() {
 		return db.query("pomodoro", new String[] { "id", "name", "type",
-				"estimated", "pomodoros", "unplanned", "interruptions",
+				"estimated", "pomodoros", "unplanned", "interruptions","done",
 				"created" }, "type=? OR type=?", new String[] { "Pomodoro","Unplanned"}, null, null, null);
 	}
 	public long insertUnplaned(long id,String name, long estimated) {

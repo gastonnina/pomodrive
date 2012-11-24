@@ -65,8 +65,9 @@ public class ListActivity extends Activity implements OnItemClickListener {
 				String type = cur.getString(2);
 				int pomodoros = cur.getInt(3);
 				ids.add((long) id);//array de posiciones
+				
 				//if (sexo.equals("m")) {
-					adaptadorLista.adicionarItem(R.drawable.ic_launcher,
+					adaptadorLista.adicionarItem(R.drawable.ico_undone,
 							name, type+ "\n" + pomodoros);
 				/*} else {
 					adaptadorLista.adicionarItem(R.drawable.ic_action_mujer,

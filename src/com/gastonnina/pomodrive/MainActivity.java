@@ -239,6 +239,10 @@ public class MainActivity extends Activity {
 		final long id = ids.get(index);
 		
 		switch (item.getItemId()) {
+		case R.id.menu_turn_done:
+			db.swDonePomodoro(id);
+			cargarDatosLista();
+			break;
 		case R.id.menu_show:
 			final Dialog miDialogShow = new Dialog(that);
 			miDialogShow.setContentView(R.layout.activity_detail);
@@ -421,9 +425,10 @@ public class MainActivity extends Activity {
 				int pomodoros = cur.getInt(4);
 				int unplanned = cur.getInt(5);
 				int interruptions = cur.getInt(6);
+				int done = cur.getInt(7);
 				ids.add((long) id);// array de posiciones
-				// if (sexo.equals("m")) {
-				adaptadorLista.adicionarItem(R.drawable.ic_launcher, name, type
+				int image = (done == 1) ? R.drawable.ico_done : R.drawable.ico_undone;
+				adaptadorLista.adicionarItem(image, name, type
 						+ "\nE: " + estimated+" P: "+pomodoros+" U: "+unplanned+" I: "+interruptions);
 				/*
 				 * } else {
