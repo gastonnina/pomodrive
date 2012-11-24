@@ -88,11 +88,14 @@ public class PomodoroDatabaseAdapter extends Service {
 		return db.query("pomodoro", new String[] { "id", "name", "estimated", "pomodoros", "unplanned", "interruptions" },
 				"id=?", new String[] { id + "" }, null, null, null);
 	}
-
+	/**
+	 * Listado de todos los pomodoros menos interrupciones
+	 * @return Cursor
+	 */
 	public Cursor getAllPomodoros() {
 		return db.query("pomodoro", new String[] { "id", "name", "type",
 				"estimated", "pomodoros", "unplanned", "interruptions",
-				"created" }, null, null, null, null, null);
+				"created" }, "type=? OR type=?", new String[] { "Pomodoro","Unplanned"}, null, null, null);
 	}
 	public long insertUnplaned(long id,String name, long estimated) {
 		//actualiza pomodoro actual
