@@ -18,6 +18,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:progress="80" />
 
     <TextView
@@ -38,6 +39,21 @@
         android:drawableLeft="@drawable/ico_play"
         android:onClick="startPomodoro"
         android:text="@string/lblStart" />
+    <Button
+        android:id="@+id/btnInterruption"
+        style="@style/PomodriveTheme.grid1.left"
+        android:layout_marginTop="250dp"
+        android:drawableLeft="@drawable/ico_pause"
+        android:onClick="registerInterruption"
+        android:text="@string/lblInterruption" />
+    <Button
+        android:id="@+id/btnUnplanned"
+        style="@style/PomodriveTheme.grid1.right"
+        android:layout_marginTop="250dp"
+        android:drawableLeft="@drawable/ico_unplanned"
+        android:onClick="registerUnpplanned"
+        android:text="@string/lblUnplanned" />
+    
     <Button
         android:id="@+id/btnTimer2"
         style="@style/PomodriveTheme.grid0"

@@ -95,6 +95,35 @@ public class PomodoroDatabaseAdapter extends Service {
 				"created" }, null, null, null, null, null);
 	}
 	/**
+	 * Registra una interrupcion como lo hace pomodario
+	 */
+	public long interruptionPomodoro(long id, String name) {
+		//actualiza pomodoro actual
+		String sql = "UPDATE pomodoro SET interruptions=interruptions+1 WHERE id=" + id+"";
+		Log.i("QUERY", "-interruption->" + sql);
+		db.execSQL(sql);
+		return insertInterruption(id,name);
+	}
+	public long insertInterruption(long id,String name) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put("type", "Interruption");
+		contentValues.put("name", name);
+		contentValues.put("estimated", 0);
+		contentValues.put("pomodoros", 0);
+		contentValues.put("unplanned", 0);
+		contentValues.put("interruptions", 0);
+		contentValues.put("ordinal", 0);
+		contentValues.put("visible", 1);
+		contentValues.put("parent", id);
+		contentValues.put("done", 0);
+		 
+		Date date = new Date();
+		ContentValues initialValues = new ContentValues(); 
+		initialValues.put("created", dateFormat.format(date));
+		
+		return db.insert("pomodoro", null, contentValues);
+	}
+	/**
 	 * Obtiene todos los datos de configuracion
 	 * @return cursor 
 	 */

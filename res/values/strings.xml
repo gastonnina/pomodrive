@@ -17,6 +17,7 @@
     <string name="btnCancel">Cancelar</string>
     <!-- Form Dialog pomodoro -->
     <string name="taskName">Tarea</string>
+    <string name="interruptionName">Interrupcion</string>
     <string name="estimated">Estimado</string>
     
     <string name="TitleConfig">Configurar Tiempos</string>
@@ -25,12 +26,15 @@
     <string name="TitleEdit">Editar Pomodoro</string>
     <string name="TitleDelete">Eliminar Pomodoro</string>
     <string name="confirmDelete">Realmente desea Eliminar?</string>
+    <string name="TitleInterruption">Adicionar Interrupcion</string>
     
     <string name="lblEstimated">Estimado</string>
     
     <string name="yes">SI</string>
     <string name="no">NO</string>
     <string name="lblStart">Iniciar</string>
+    <string name="lblInterruption">Interrupcion</string>
+    <string name="lblUnplanned">No Planeado</string>
     <string name="lblStop">Detener</string>
     <string name="lblDone">Hecho</string>
     <string name="lblNext">Siguiente</string>

@@ -46,7 +46,7 @@ import com.gastonnina.pomodrive.db.PomodoroDatabaseAdapter;
 public class MainActivity extends Activity {
 	MainActivity that = this;
 	TextView lblReloj,lblCurTask;
-	Button btnTimer,btnConfig,btnAdd;
+	Button btnTimer,btnConfig,btnAdd,btnInteruption;
 	CountDownTimer reloj;
 	Chronometer relojb;
 	//long minute = 60000;//minuto real
@@ -132,6 +132,7 @@ public class MainActivity extends Activity {
 		btnTimer = (Button) findViewById(R.id.btnTimer);
 		btnConfig = (Button) findViewById(R.id.btnConfig);
 		btnAdd = (Button) findViewById(R.id.btnAdd);
+		btnInteruption = (Button) findViewById(R.id.btnInterruption);
 		
 		//fuente
 		lblReloj.setTypeface(font);
@@ -639,6 +640,38 @@ public class MainActivity extends Activity {
 		});
     	miDialog.show();//importante
 	}
+	public void interruptionOption(View view){
+		//Log.i("INFO", "Dentro de opcion Interrupcion");
+		final Dialog miDialog = new Dialog(that);
+		miDialog.setContentView(R.layout.form_interruption);
+    	miDialog.setTitle(R.string.TitleInterruption);
+		
+		final TextView pomTxtName = (TextView) miDialog.findViewById(R.id.pomTxtName);
+		
+    	
+    	pomTxtName.setText("");
+    	
+		//FIXME - mover a un general
+		//Recojemos el boton para anadirle una accion
+		Button btnSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
+		
+		btnSave.setOnClickListener(new OnClickListener() {
+		     public void onClick(View v) {
+					//actualiza BD
+				db.interruptionPomodoro(curPom.id, pomTxtName.getText()
+						.toString());
+				miDialog.dismiss();
+				cargarDatosLista();
+		     }
+		 });   
+		Button btnCancel = (Button) miDialog.findViewById(R.id.btnFrmCancel);
+		btnCancel.setOnClickListener(new OnClickListener() {
+		     public void onClick(View v) {
+		    	 miDialog.dismiss();
+		     }
+		});
+    	miDialog.show();//importante
+	}
 	public void configOption(View view){
 		final Dialog miDialog = new Dialog(that);
 		miDialog.setContentView(R.layout.form_config);
@@ -768,7 +801,11 @@ public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 	private static final String TAG_INFO = "INFO";
 	private static final String TAG_RELOJ = "RELOJ";
-
+	
+	public void registerInterruption(View view) {
+		interruptionOption(btnInteruption);
+	}
+	
 	public void startPomodoro(View view) {
 		isTimeBreak = false;
 		lblReloj.setTextAppearance(this, R.style.PomodriveTheme_yellowGoogle);
