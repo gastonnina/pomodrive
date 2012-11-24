@@ -89,6 +89,14 @@ public class PomodoroDatabaseAdapter extends Service {
 				"id=?", new String[] { id + "" }, null, null, null);
 	}
 	/**
+	 * Limpia todos los done a visible 0
+	 */
+	public void cleanDone(){
+		String sql = "UPDATE pomodoro SET visible=0 WHERE done=1";
+		//Log.i("QUERY", "-interruption->" + sql);
+		db.execSQL(sql);
+	}
+	/**
 	 * SW para done o no done
 	 * @param id, id del pomodoro
 	 */
@@ -105,7 +113,7 @@ public class PomodoroDatabaseAdapter extends Service {
 	public Cursor getAllPomodoros() {
 		return db.query("pomodoro", new String[] { "id", "name", "type",
 				"estimated", "pomodoros", "unplanned", "interruptions","done",
-				"created" }, "type=? OR type=?", new String[] { "Pomodoro","Unplanned"}, null, null, null);
+				"created" }, "(type=? OR type=?) AND visible=1", new String[] { "Pomodoro","Unplanned"}, null, null, null);
 	}
 	public long insertUnplaned(long id,String name, long estimated) {
 		//actualiza pomodoro actual

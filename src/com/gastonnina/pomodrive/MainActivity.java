@@ -594,6 +594,12 @@ public class MainActivity extends Activity {
 		 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		 startActivity(intent);
 	}
+	/**
+	 * Borra de listado todos los done
+	 */
+	public void cleanOption(View view){
+		db.cleanDone();
+	}
 	public void addOption(View view){
 		final Dialog miDialog = new Dialog(that);
 		miDialog.setContentView(R.layout.form_pomodoro);
