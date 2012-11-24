@@ -49,8 +49,8 @@ public class MainActivity extends Activity {
 	Button btnTimer,btnConfig,btnAdd,btnInteruption,btnUnplanned;
 	CountDownTimer reloj;
 	Chronometer relojb;
-	//long minute = 60000;//minuto real
-	long minute = 5000;//5 segundos
+	long minute = 60000;//minuto real
+	//long minute = 5000;//5 segundos
 	// long minute =1000;
 	long second = 1000;
 	long pomodoroLength = 25 * minute;// 25//5
