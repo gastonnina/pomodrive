@@ -94,16 +94,45 @@ public class PomodoroDatabaseAdapter extends Service {
 				"estimated", "pomodoros", "unplanned", "interruptions",
 				"created" }, null, null, null, null, null);
 	}
+	public long insertUnplaned(long id,String name, long estimated) {
+		//actualiza pomodoro actual
+		String sql = "UPDATE pomodoro SET unplanned=unplanned+1 WHERE id=" + id+"";
+		//Log.i("QUERY", "-interruption->" + sql);
+		db.execSQL(sql);
+		ContentValues contentValues = new ContentValues();
+		contentValues.put("type", "Unplanned");
+		contentValues.put("name", name);
+		contentValues.put("estimated", estimated);
+		contentValues.put("pomodoros", 0);
+		contentValues.put("unplanned", 0);
+		contentValues.put("interruptions", 0);
+		contentValues.put("ordinal", 0);
+		contentValues.put("visible", 1);
+		contentValues.put("parent", id);
+		contentValues.put("done", 0);
+		 
+		Date date = new Date();
+		ContentValues initialValues = new ContentValues(); 
+		initialValues.put("created", dateFormat.format(date));
+		
+		return db.insert("pomodoro", null, contentValues);
+	}
 	/**
 	 * Registra una interrupcion como lo hace pomodario
 	 */
 	public long interruptionPomodoro(long id, String name) {
 		//actualiza pomodoro actual
 		String sql = "UPDATE pomodoro SET interruptions=interruptions+1 WHERE id=" + id+"";
-		Log.i("QUERY", "-interruption->" + sql);
+		//Log.i("QUERY", "-interruption->" + sql);
 		db.execSQL(sql);
 		return insertInterruption(id,name);
 	}
+	/**
+	 * Insercion de una interrupcion siempre regquiere un padre
+	 * @param  long id, id del pomodoro padre
+	 * @param string name, nombre de la interrupcion
+	 * @return long id, de la interrupcion insertadoa
+	 */
 	public long insertInterruption(long id,String name) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("type", "Interruption");

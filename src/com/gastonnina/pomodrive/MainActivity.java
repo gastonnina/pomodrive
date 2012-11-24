@@ -46,7 +46,7 @@ import com.gastonnina.pomodrive.db.PomodoroDatabaseAdapter;
 public class MainActivity extends Activity {
 	MainActivity that = this;
 	TextView lblReloj,lblCurTask;
-	Button btnTimer,btnConfig,btnAdd,btnInteruption;
+	Button btnTimer,btnConfig,btnAdd,btnInteruption,btnUnplanned;
 	CountDownTimer reloj;
 	Chronometer relojb;
 	//long minute = 60000;//minuto real
@@ -133,6 +133,7 @@ public class MainActivity extends Activity {
 		btnConfig = (Button) findViewById(R.id.btnConfig);
 		btnAdd = (Button) findViewById(R.id.btnAdd);
 		btnInteruption = (Button) findViewById(R.id.btnInterruption);
+		btnUnplanned = (Button) findViewById(R.id.btnUnplanned);
 		
 		//fuente
 		lblReloj.setTypeface(font);
@@ -672,6 +673,58 @@ public class MainActivity extends Activity {
 		});
     	miDialog.show();//importante
 	}
+	public void unplannedOption(View view){
+		final Dialog miDialog = new Dialog(that);
+		miDialog.setContentView(R.layout.form_pomodoro);
+    	miDialog.setTitle(R.string.TitleUnplanned);
+    		
+    	
+		TextView pomTxtId = (TextView) miDialog.findViewById(R.id.pomTxtId);
+		final TextView pomTxtName = (TextView) miDialog.findViewById(R.id.pomTxtName);
+		final TextView lblFrmTxtEstimated = (TextView) miDialog.findViewById(R.id.lblFrmTxtEstimated);
+		final SeekBar pomBarEstimated = (SeekBar) miDialog.findViewById(R.id.pomBarEstimated);
+		
+		pomBarEstimated
+				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+					public void onStopTrackingTouch(SeekBar bar) {
+						// txt2.setText("seekbar has been stop");
+					}
+
+					public void onStartTrackingTouch(SeekBar bar) {
+						// txt2.setText("seekbar has started");
+					}
+
+					public void onProgressChanged(SeekBar bar,
+							int paramInt, boolean paramBoolean) {
+						lblFrmTxtEstimated.setText(getString(R.string.lblEstimated)
+								+ ": " + (paramInt + 1));
+					}
+         });
+    	pomTxtId.setText("");
+    	pomTxtName.setText("");
+    	lblFrmTxtEstimated.setText(getString(R.string.lblEstimated)+ ": 1");
+    	pomBarEstimated.setProgress(0);
+
+		//FIXME - mover a un general
+		//Recojemos el boton para anadirle una accion
+		Button btnSave = (Button) miDialog.findViewById(R.id.btnFrmSave);
+		
+		btnSave.setOnClickListener(new OnClickListener() {
+		     public void onClick(View v) {
+					//actualiza BD
+					db.insertUnplaned(curPom.id,pomTxtName.getText().toString(),(long) (pomBarEstimated.getProgress()+1));
+					miDialog.dismiss();
+					cargarDatosLista();
+		     }
+		 });   
+		Button btnCancel = (Button) miDialog.findViewById(R.id.btnFrmCancel);
+		btnCancel.setOnClickListener(new OnClickListener() {
+		     public void onClick(View v) {
+		    	 miDialog.dismiss();
+		     }
+		});
+    	miDialog.show();//importante
+	}
 	public void configOption(View view){
 		final Dialog miDialog = new Dialog(that);
 		miDialog.setContentView(R.layout.form_config);
@@ -806,6 +859,9 @@ public class MainActivity extends Activity {
 		interruptionOption(btnInteruption);
 	}
 	
+	public void registerUnplanned(View view) {
+		unplannedOption(btnUnplanned);
+	}
 	public void startPomodoro(View view) {
 		isTimeBreak = false;
 		lblReloj.setTextAppearance(this, R.style.PomodriveTheme_yellowGoogle);

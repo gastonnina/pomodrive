@@ -27,6 +27,8 @@
     <string name="TitleDelete">Eliminar Pomodoro</string>
     <string name="confirmDelete">Realmente desea Eliminar?</string>
     <string name="TitleInterruption">Adicionar Interrupcion</string>
+    <string name="TitleUnplanned">Adicionar Pomodoro no Planeado</string>
+    
     
     <string name="lblEstimated">Estimado</string>
     

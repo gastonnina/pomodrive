@@ -51,7 +51,7 @@
         style="@style/PomodriveTheme.grid1.right"
         android:layout_marginTop="250dp"
         android:drawableLeft="@drawable/ico_unplanned"
-        android:onClick="registerUnpplanned"
+        android:onClick="registerUnplanned"
         android:text="@string/lblUnplanned" />
     
     <Button
